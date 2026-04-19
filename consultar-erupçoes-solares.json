@@ -1,0 +1,666 @@
+{
+  "name": "consultar-erupçoes-solares",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d5b2358e-896b-468f-8225-4923a7fd068d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "donkiSolarFlare",
+        "additionalFields": {
+          "startDate": "={{ $today.minus(30, \"days\").format('dd-MM-yyyy') }}"
+        }
+      },
+      "type": "n8n-nodes-base.nasa",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ecda886b-9a31-4c9c-bffa-50b23f7f906f",
+      "name": "Get a DONKI solar flare",
+      "credentials": {
+        "nasaApi": {
+          "id": "nSxEg5bbGZrXTbox",
+          "name": "NASA account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "dados de explosão solar ",
+        "height": 384,
+        "width": 512
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -128,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "0753f95c-3252-49fb-b492-5f94b7ff7564",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "edd682ef-8260-42c4-9512-f5f470a5c64d",
+              "leftValue": "={{ $json.classType }}",
+              "rightValue": "C",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        128
+      ],
+      "id": "586b1650-057e-4fa5-aa10-a9778f40db12",
+      "name": "filtro de clase C"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7ddd2b20-b449-4ee1-bdc4-89b349b6f1f7",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        816,
+        240
+      ],
+      "id": "bceb239a-9c54-4396-8f9b-5e689aca924f",
+      "name": "filtros de clase M"
+    },
+    {
+      "parameters": {
+        "content": "filtragem das categorias de explosoes solares dos tipo x,m,c",
+        "height": 784,
+        "width": 1232,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "f3a450d9-1606-4af0-bfa6-f44e1828b58a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2e1135e7-6c26-4999-be99-a7eb443c737b",
+              "leftValue": "={{ $json.classType }}",
+              "rightValue": "X",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "73f83dfe-27a2-428e-9c09-21d6176b2f17",
+      "name": "filtro de classe X"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e4137097-8858-40a7-858a-a63882a202c6",
+              "name": "=uma erupção solar da classe {{ $json.classType }} foi detectada  na localização solar {{ $json.sourceLocation }}",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        -128
+      ],
+      "id": "26b4edb8-ee3d-4c38-8117-f0417f56b425",
+      "name": "filtra-dados-classe-x"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f5dcbe97-31f5-4beb-92a3-33d5704381a3",
+              "name": "=uma erupção solar da classe {{ $json.classType }} foi detectada  na localização solar {{ $json.sourceLocation }}",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        16
+      ],
+      "id": "a0aec829-a325-449d-ac36-f710bce8c202",
+      "name": "filtra-dados-classe-c"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "91785125-3174-40e1-a92e-a639e8ab3b8f",
+              "name": "=uma erupção solar da classe {{ $json.classType }} foi detectada  na localização solar {{ $json.sourceLocation }}",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        992,
+        128
+      ],
+      "id": "8ad6274f-63f8-4ef8-9563-d55a7e16dcb9",
+      "name": "filtra-dados-classe-m"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4",
+          "mode": "list",
+          "cachedResultName": "explosões solares",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "classe x",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "classe ": "={{ $json.classe }}",
+            "detalhe ": "={{ $json.detalhes }}",
+            "data ": "={{ $json.data_extracao }}"
+          },
+          "matchingColumns": [
+            "classe "
+          ],
+          "schema": [
+            {
+              "id": "classe ",
+              "displayName": "classe ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "detalhe ",
+              "displayName": "detalhe ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data ",
+              "displayName": "data ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        -304
+      ],
+      "id": "171d88c7-fb50-4221-ac86-53ab036fbc26",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "ZBk0EERhujPMkFtw",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4",
+          "mode": "list",
+          "cachedResultName": "explosões solares",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1911618410,
+          "mode": "list",
+          "cachedResultName": "classe m",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4/edit#gid=1911618410"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "classe ": "={{ $json.classe }}",
+            "detalhe ": "={{ $json.detalhes }}",
+            "data ": "={{ $json.data_extracao }}"
+          },
+          "matchingColumns": [
+            "classe "
+          ],
+          "schema": [
+            {
+              "id": "classe ",
+              "displayName": "classe ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "detalhe ",
+              "displayName": "detalhe ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "data ",
+              "displayName": "data ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1360,
+        -32
+      ],
+      "id": "3f5b830d-496c-40f8-b84d-7c0db9944893",
+      "name": "Append or update row in sheet2",
+      "credentials": {
+        "googleApi": {
+          "id": "ZBk0EERhujPMkFtw",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4",
+          "mode": "list",
+          "cachedResultName": "explosões solares",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1082928843,
+          "mode": "list",
+          "cachedResultName": "classe c",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19VcUPAW0xfXT3iOk04Qy-cUE9mzw8RO3_4pwzGJSOC4/edit#gid=1082928843"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "classe ": "={{ $json.classe }}",
+            "detalhe ": "={{ $json.detalhes }}",
+            "data ": "={{ $json.data_extracao }}"
+          },
+          "matchingColumns": [
+            "classe "
+          ],
+          "schema": [
+            {
+              "id": "classe ",
+              "displayName": "classe ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "detalhe ",
+              "displayName": "detalhe ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "data ",
+              "displayName": "data ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1200,
+        -192
+      ],
+      "id": "f3ac1d0d-e611-495c-b4f6-88a193acb0a0",
+      "name": "Append or update row in sheet1",
+      "credentials": {
+        "googleApi": {
+          "id": "ZBk0EERhujPMkFtw",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\n// Percorre todos os itens que chegaram no nó\nfor (const item of items) {\n  const rawData = item.json;\n  \n  // Pega a primeira chave (ex: \"uma erupção solar da classe C4\")\n  const classeChave = Object.keys(rawData)[0];\n  \n  if (classeChave) {\n    // Pega a sub-chave (ex: \"1 foi detectada na localização solar N15E57\")\n    const detalhesChave = Object.keys(rawData[classeChave])[0];\n    \n    results.push({\n      json: {\n        classe: classeChave.replace('uma erupção solar da classe ', ''), // Deixa só \"C4\"\n        detalhes: detalhesChave,\n        data_extracao: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -240
+      ],
+      "id": "6bbd75e7-3127-4c9e-9cbd-e303278b894f",
+      "name": "organiza o formato dos dados da classe x"
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\n// Percorre todos os itens que chegaram no nó\nfor (const item of items) {\n  const rawData = item.json;\n  \n  // Pega a primeira chave (ex: \"uma erupção solar da classe C4\")\n  const classeChave = Object.keys(rawData)[0];\n  \n  if (classeChave) {\n    // Pega a sub-chave (ex: \"1 foi detectada na localização solar N15E57\")\n    const detalhesChave = Object.keys(rawData[classeChave])[0];\n    \n    results.push({\n      json: {\n        classe: classeChave.replace('uma erupção solar da classe ', ''), // Deixa só \"C4\"\n        detalhes: detalhesChave,\n        data_extracao: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -80
+      ],
+      "id": "15a801e1-46f3-48d9-acbd-0e979f66a2c3",
+      "name": "organiza o formato dos dados da classe c"
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\n// Percorre todos os itens que chegaram no nó\nfor (const item of items) {\n  const rawData = item.json;\n  \n  // Pega a primeira chave (ex: \"uma erupção solar da classe C4\")\n  const classeChave = Object.keys(rawData)[0];\n  \n  if (classeChave) {\n    // Pega a sub-chave (ex: \"1 foi detectada na localização solar N15E57\")\n    const detalhesChave = Object.keys(rawData[classeChave])[0];\n    \n    results.push({\n      json: {\n        classe: classeChave.replace('uma erupção solar da classe ', ''), // Deixa só \"C4\"\n        detalhes: detalhesChave,\n        data_extracao: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        48
+      ],
+      "id": "d2dcdd18-cb26-4058-95dd-cc6282fab722",
+      "name": "organiza o formato dos dados da classe m"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get a DONKI solar flare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a DONKI solar flare": {
+      "main": [
+        [
+          {
+            "node": "filtro de classe X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtro de clase C": {
+      "main": [
+        [
+          {
+            "node": "filtra-dados-classe-c",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "filtros de clase M",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtros de clase M": {
+      "main": [
+        [
+          {
+            "node": "filtra-dados-classe-m",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "filtro de classe X": {
+      "main": [
+        [
+          {
+            "node": "filtra-dados-classe-x",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "filtro de clase C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtra-dados-classe-x": {
+      "main": [
+        [
+          {
+            "node": "organiza o formato dos dados da classe x",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtra-dados-classe-c": {
+      "main": [
+        [
+          {
+            "node": "organiza o formato dos dados da classe c",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtra-dados-classe-m": {
+      "main": [
+        [
+          {
+            "node": "organiza o formato dos dados da classe m",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "organiza o formato dos dados da classe x": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "organiza o formato dos dados da classe c": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "organiza o formato dos dados da classe m": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b2248535-e673-43d3-9389-fdba06c3ded1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "54266af47962a0e07e1db2ab9e1834d7d2c1134147513e782348466144819686"
+  },
+  "id": "nPupn251VeqAJWHw",
+  "tags": []
+}
